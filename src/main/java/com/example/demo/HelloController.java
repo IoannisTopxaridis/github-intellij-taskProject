@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 public class HelloController {
 
-    @Autowired // Λέμε στο Spring: "Σύνδεσε αυτόματα τον εγκέφαλο (TaskService) εδώ"
+    @Autowired
     private TaskService taskService;
 
     @GetMapping("/api/all-tasks")
@@ -23,7 +23,7 @@ public class HelloController {
 
     @PostMapping("/api/create-task")
     public String createTask(@RequestBody Task newTask) {
-        // Στέλνουμε το νέο task στο Service, και αυτό με τη σειρά του στο Repository για save στη MySQL
+
         taskService.addTask(newTask);
         return "Το Task δημιουργήθηκε με επιτυχία στη MySQL!";
     }

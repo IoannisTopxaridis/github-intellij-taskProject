@@ -11,14 +11,12 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    // 1. Ιδιότητες (Πεδία) της εργασίας μας
     private String title;
     private String status; // Μπορεί να είναι "Todo", "InProgress", "Completed"
 
     public Task() {
     }
-    // 2. Constructor (Κατασκευαστής) - Για να φτιάχνουμε εύκολα ένα νέο Task
+
     public Task(String title, String status) {
         this.title = title;
         this.status = status;
