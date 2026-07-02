@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title> Το front end μου</title>
+
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none; /* Εδώ βάλαμε το none για να φύγει το περίγραμμα */
+            border-radius: 4px; /* Στρογγυλεύει όμορφα τις γωνίες */
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-right: 5px; /* Δίνει λίγο αέρα ανάμεσα στα κουμπιά για να μην κολλάνε */
+        }
+        button:hover {
+            background-color: #0056b3; /* Σκουραίνει λίγο στο hover */
+        }
+
+        /* Το κάθε Task (li) */
+        li {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between; /* Σπρώχνει το κείμενο αριστερά και το κουμπί δεξιά */
+            align-items: center;
+            text-align: left;
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+<h1>Λίστα Εργασιών</h1>
+
+<label for="input-title">Γράψε ένα Task..</label>
+<input id="input-title" type="text">
+<button onclick="getTaskFromServer()">Εμφάνιση Εργασιών</button>
+<button onclick="saveTaskFromScreen()">Αποθήκευση</button>
+
+<ul id="my-list"></ul>
+
+<script>
+    function getTaskFromServer() {
+        fetch("http://localhost:8080/api/all-tasks")
+            .then(response => response.json())
+            .then(data => {
+                let list = document.getElementById("my-list");
+                list.innerHTML = ""; // Καθαρίζουμε τη λίστα
+                console.log(data);
+                data.forEach(task => {
+                    let item = document.createElement("li");
+                    item.textContent = task.title;
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.textContent = "Διαγραφή";
+
+                    deleteBtn.onclick = function () {
+                        fetch("http://localhost:8080/api/delete-task/" + task.id , {
+                            method: "DELETE"
+                        })
+                            .then(() => {
+                                getTaskFromServer();
+                            })
+
+                    }
+                    item.appendChild(deleteBtn);
+                    list.appendChild(item);
+                });
+            });
+    }
+
+    function saveTaskFromScreen() {
+
+        let typedTitle = document.getElementById("input-title").value;
+
+        let myNewTask = {
+            title: typedTitle,
+            status: "InProgress"
+        };
+
+        fetch("http://localhost:8080/api/create-task", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(myNewTask)
+        });
+    }
+
+</script>
+
+
+</body>
+</html>
