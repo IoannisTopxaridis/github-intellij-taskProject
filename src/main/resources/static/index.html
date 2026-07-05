@@ -53,8 +53,9 @@
 <ul id="my-list"></ul>
 
 <script>
-    // function getTaskFromServer() takes JSON data from Spring API and converts it to JavaScript arrays to view on screen
-    function getTaskFromServer() {
+
+    function getTaskFromServer() {                             // function getTaskFromServer() takes JSON data from Spring API and converts it to
+                                                               // JavaScript arrays to view on screen
 
         fetch("http://localhost:8080/api/all-tasks")           // GET request to the controller
             .then(response => response.json())                 // Convert the server response to JSON and update the application
@@ -94,7 +95,7 @@
         };
 
         fetch("http://localhost:8080/api/create-task", {
-            method: "POST", // HTTP method that crates new data
+            method: "POST",                                     // HTTP method that crates new data
             headers: {
                 "Content-Type": "application/json"
             },
@@ -102,7 +103,7 @@
 
         })
             .then(() => {
-                getTaskFromServer(); //automatically refresh the list after creating a new item in the list
+                getTaskFromServer();                            //automatically refresh the list after creating a new item in the list
             })
 
     }
