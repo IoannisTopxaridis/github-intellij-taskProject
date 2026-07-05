@@ -10,6 +10,7 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
+
         button {
             background-color: #007bff;
             color: #ffffff;
@@ -19,6 +20,7 @@
             cursor: pointer;
             margin-right: 5px; /* Δίνει λίγο αέρα ανάμεσα στα κουμπιά για να μην κολλάνε */
         }
+
         button:hover {
             background-color: #0056b3; /* Σκουραίνει λίγο στο hover */
         }
@@ -37,7 +39,6 @@
         }
 
 
-
     </style>
 
 </head>
@@ -52,13 +53,15 @@
 <ul id="my-list"></ul>
 
 <script>
+    // function getTaskFromServer() takes JSON data from Spring API and converts it to JavaScript arrays to view on screen
     function getTaskFromServer() {
-        fetch("http://localhost:8080/api/all-tasks")
-            .then(response => response.json())
+
+        fetch("http://localhost:8080/api/all-tasks")           // GET request to the controller
+            .then(response => response.json())                 // Convert the server response to JSON and update the application
             .then(data => {
                 let list = document.getElementById("my-list");
-                list.innerHTML = ""; // Καθαρίζουμε τη λίστα
-                console.log(data);
+                list.innerHTML = "";                           // deletes everything currently inside it
+                console.log(data);                             // browser's Developer Console debugging
                 data.forEach(task => {
                     let item = document.createElement("li");
                     item.textContent = task.title;
@@ -67,16 +70,16 @@
                     deleteBtn.textContent = "Διαγραφή";
 
                     deleteBtn.onclick = function () {
-                        fetch("http://localhost:8080/api/delete-task/" + task.id , {
-                            method: "DELETE"
+                        fetch("http://localhost:8080/api/delete-task/" + task.id, {
+                            method: "DELETE"                    // HTTP method that removes data
                         })
                             .then(() => {
-                                getTaskFromServer();
+                                getTaskFromServer();            //automatically refresh the list after deletion
                             })
 
                     }
-                    item.appendChild(deleteBtn);
-                    list.appendChild(item);
+                    item.appendChild(deleteBtn);                //user can see the delete button on each list item
+                    list.appendChild(item);                     //user can see the list
                 });
             });
     }
@@ -91,12 +94,17 @@
         };
 
         fetch("http://localhost:8080/api/create-task", {
-            method: "POST",
+            method: "POST", // HTTP method that crates new data
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(myNewTask)
-        });
+
+        })
+            .then(() => {
+                getTaskFromServer(); //automatically refresh the list after creating a new item in the list
+            })
+
     }
 
 </script>
